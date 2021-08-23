@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="create_write">
+        <a href="{%url 'create'%}">
+            <div class="create_btn">
+                +
+            </div>
+        </a>
+    </div>
+    <p>글 작성하기</p>
+
+    {% for write in all_write %}
+    <div class="all_write">
+        <p>{{write.id}}</p>
+        <p>{{write.title}}</p>
+        <p>{{write.content}}</p>
+        <p>{{write.updated_at}}</p>
+    </div>
+    {%endfor%}
+</body>
+</html>
