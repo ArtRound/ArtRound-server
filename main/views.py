@@ -41,7 +41,7 @@ class ReviewDetail(APIView):
             raise Http404
 
     # Review detail 보기
-    def get_object(self, request, pk, format=None):
+    def get(self, request, pk, format=None):
         review = self.get_object(pk)
         serializer = ReviewSerializer(review)
         return Response(serializer.data)
