@@ -17,12 +17,14 @@
     <p>글 작성하기</p>
 
     {% for write in all_write %}
-    <div class="all_write">
-        <p>{{write.id}}</p>
-        <p>{{write.title}}</p>
-        <p>{{write.content}}</p>
-        <p>{{write.updated_at}}</p>
-    </div>
+    <a href="{% url 'detail' write.id %}">
+        <div class="all_write">
+            <p>{{write.id}}</p>
+            <p>{{write.title}}</p>
+            <p>{{write.content}}</p>
+            <p>{{write.updated_at}}</p>
+        </div>
+    </a>    
     {%endfor%}
 </body>
 </html>
