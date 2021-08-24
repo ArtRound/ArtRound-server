@@ -30,7 +30,7 @@ def detail(request, write_id):
 
 
 def update(request, write_id):
-    my_write = get_object_or_404(Write, id=write_id)
+    my_write = get_object_or_404(Write, pk=write_id)
     if request.method == 'POST':
         update_form = WriteForm(request.POST, instance=my_write)
 
@@ -40,6 +40,12 @@ def update(request, write_id):
 
     update_form = WriteForm(instance=my_write)
     return render(request, 'update.html', {'update_form': update_form})
+
+
+def delete(request, write_id):
+    my_write = get_object_or_404(Write, pk=write_id)
+    my_write.delete()
+    return redirect('index')
 
 
 @api_view(['GET'])
