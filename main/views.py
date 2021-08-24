@@ -1,53 +1,62 @@
+from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from .models import Post
-from .serializers import PostSerializer
+from django.http import Http404
 
-from django.shortcuts import get_object_or_404, redirect, render
-from .forms import WriteForm
-from .models import Write
+from .serializers import ReviewSerializer
+from .models import Review
 
 
-def index(request):
-    all_write = Write.objects.all()
-    return render(request, 'index.html', {'all_write': all_write})
+# def index(request):
+#     all_write = Write.objects.all()
+#     return render(request, 'index.html', {'all_write': all_write})
 
 
-def create(request):
-    if request.method == 'POST':
-        create_form = WriteForm(request.POST)
-        if create_form.is_valid():
-            create_form.save()
-        return redirect('index')
-    write_form = WriteForm
-    return render(request, 'create.html', {'write_form': write_form})
+# @api_view(['GET, POST'])
+class ReviewList(APIView):
+    # 블로그 목록 보여줄 때
+    def get(self, request):
+        reviews = Review.objects.all()
+        # 여러개 객체 serialize하려면 many=True
+        # TO JSON Format
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+
+    # 새 글 작성시
+    def post(self, request):
+        serializer = ReviewSerializer(
+            data=request.data)  # request.data는 사용자 입력 데이터
+        if serializer.is_valid():  # 유효성 검사
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def detail(request, write_id):
-    my_write = get_object_or_404(Write, pk=write_id)
+class ReviewDetail(APIView):
+    # Review 객체 가져오기
+    def get_object(self, pk):
+        try:
+            return Review.objects.get(pk=pk)
+        except Review.DoesNotExist:
+            raise Http404
 
-    return render(request, 'detail.html', {'my_write': my_write})
+    # Review detail 보기
+    def get_object(self, request, pk, format=None):
+        review = self.get_object(pk)
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data)
 
+    # Review 수정하기
+    def put(self, request, pk, format=None):
+        review = self.get_object(pk)
+        serializer = ReviewSerializer(review, data=request.data)
+        if serializer.is_valid():  # 유효성 검사
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def update(request, write_id):
-    my_write = get_object_or_404(Write, pk=write_id)
-    if request.method == 'POST':
-        update_form = WriteForm(request.POST, instance=my_write)
-
-        if update_form.is_valid():
-            update_form.save()
-            return redirect('index')
-
-    update_form = WriteForm(instance=my_write)
-    return render(request, 'update.html', {'update_form': update_form})
-
-
-def delete(request, write_id):
-    my_write = get_object_or_404(Write, pk=write_id)
-    my_write.delete()
-    return redirect('index')
-
-
-@api_view(['GET'])
-def helloAPI(request):
-    return Response('hello world!')
+    # Review 삭제하기
+    def delete(self, request, pk, format=None):
+        review = self.get_object(pk)
+        review.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

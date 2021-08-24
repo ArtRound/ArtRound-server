@@ -1,6 +1,8 @@
-from django.urls import path, include
-from .views import helloAPI
+from django.urls import path
+from .views import ReviewList, ReviewDetail
 
 urlpatterns = [
-    path('hello/', helloAPI)
+    # path('hello/', helloAPI),
+    # path('<int:id>/', create),
+    path('ReviewList/', ReviewList.as_view()),
 ]
