@@ -29,6 +29,19 @@ def detail(request, write_id):
     return render(request, 'detail.html', {'my_write': my_write})
 
 
+def update(request, write_id):
+    my_write = get_object_or_404(Write, id=write_id)
+    if request.method == 'POST':
+        update_form = WriteForm(request.POST, instance=my_write)
+
+        if update_form.is_valid():
+            update_form.save()
+            return redirect('index')
+
+    update_form = WriteForm(instance=my_write)
+    return render(request, 'update.html', {'update_form': update_form})
+
+
 @api_view(['GET'])
 def helloAPI(request):
     return Response('hello world!')

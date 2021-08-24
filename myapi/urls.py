@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import path, include
 from django.contrib import admin
 
-from main.views import index, create, detail
+from main.views import index, create, detail, update
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +24,6 @@ urlpatterns = [
     path('', index, name='index'),
     path('create/', create, name='create'),
     path('detail/<int:write_id>', detail, name="detail"),
+    path('update/<int:write_id>', update, name="update"),
 
 ]
