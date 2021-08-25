@@ -7,12 +7,6 @@ from .serializers import ReviewSerializer
 from .models import Review
 
 
-# def index(request):
-#     all_write = Write.objects.all()
-#     return render(request, 'index.html', {'all_write': all_write})
-
-
-# @api_view(['GET, POST'])
 class ReviewList(APIView):
     # 블로그 목록 보여줄 때
     def get(self, request):
