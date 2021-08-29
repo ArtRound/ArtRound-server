@@ -49,6 +49,9 @@ INSTALLED_APPS = [
 
     # providers 구글 페북 네이버 카카오
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook', # 아직 페북은 정상작동 안됨 도메인 뭐시기 뜸
+    'allauth.socialaccount.providers.naver',
+    'allauth.socialaccount.providers.kakao',
 ]
 
 MIDDLEWARE = [
