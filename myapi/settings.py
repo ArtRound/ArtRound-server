@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites', # 사이트 정보를 설정하기위해 필요
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -40,6 +41,11 @@ INSTALLED_APPS = [
     'main',
     'rest_framework',
     'corsheaders',
+
+     # allauth
+    'allauth', 
+    'allauth.account', # 가입 계정 관리
+    'allauth.socialaccount', # 소셜 가입 계정 관리
 ]
 
 MIDDLEWARE = [
@@ -132,3 +138,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 2
+
+
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REOIRECT_URL = '/'
+ACCOUNT_LOGOUT_ON_GET = True
