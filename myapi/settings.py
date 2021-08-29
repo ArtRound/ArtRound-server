@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'allauth', 
     'allauth.account', # 가입 계정 관리
     'allauth.socialaccount', # 소셜 가입 계정 관리
+
+    # providers 구글 페북 네이버 카카오
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
