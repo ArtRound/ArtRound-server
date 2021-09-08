@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 REST_FRAMEWORK = {
-    'DATE_FORMAT': '%Y-%m-%d'
+    'DATE_FORMAT': '%Y.%m.%d'
 }
 
 INSTALLED_APPS = [
