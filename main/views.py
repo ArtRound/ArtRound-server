@@ -60,16 +60,14 @@ class QuestionList(APIView):
     # 블로그 목록 보여줄 때
     def get(self, request):
         questions = Question.objects.all()
-        # 여러개 객체 serialize하려면 many=True
-        # TO JSON Format
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
 
     # 새 글 작성시
     def post(self, request):
         serializer = QuestionSerializer(
-            data=request.data)  # request.data는 사용자 입력 데이터
-        if serializer.is_valid():  # 유효성 검사
+            data=request.data)
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

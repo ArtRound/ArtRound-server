@@ -6,7 +6,7 @@ from django.db import models
 class Review(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
-    useremail = models.EmailField(max_length=128)
+    useremail = models.EmailField(max_length=128, null=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
