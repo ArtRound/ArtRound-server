@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404
 
-from .serializers import ReviewSerializer, QuestionSerializer
-from .models import Review, Question
+from .serializers import ReviewSerializer, QuestionSerializer, NoticeSerializer
+from .models import Review, Question, Notice
 
 
 class ReviewList(APIView):
@@ -55,6 +55,7 @@ class ReviewDetail(APIView):
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+#--------------------------------------------------------------------------------
 
 class QuestionList(APIView):
     # 블로그 목록 보여줄 때
@@ -96,4 +97,51 @@ class QuestionDetail(APIView):
     def delete(self, request, pk, format=None):
         question = self.get_object(pk)
         question.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#--------------------------------------------------------------------------------
+
+class NoticeList(APIView):
+    # 공지사항 목록
+    def get(self, request):
+        notices = Notice.objects.all()
+        serializer = NoticeSerializer(notices, many=True)
+        return Response(serializer.data)
+
+    # Notice Create
+    def post(self, request):
+        serializer = NoticeSerializer(data=request.data)  # request.data : 사용자 입력 데이터
+        if serializer.is_valid():  # 유효성 검사
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class NoticeDetail(APIView):
+    # Notice 객체 가져오기
+    def get_object(self, pk):
+        try:
+            return Notice.objects.get(pk=pk)
+        except Notice.DoesNotExist:
+            raise Http404
+
+    # Notice Read
+    def get(self, request, pk, format=None):
+        notice = self.get_object(pk)
+        serializer = NoticeSerializer(notice)
+        return Response(serializer.data)
+
+    # Notice Update
+    def put(self, request, pk, format=None):
+        notice = self.get_object(pk)
+        serializer = NoticeSerializer(notice, data=request.data)
+        if serializer.is_valid():  # 유효성 검사
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Notice Delete
+    def delete(self, request, pk, format=None):
+        notice = self.get_object(pk)
+        notice.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
