@@ -17,4 +17,4 @@ class QuestionSerializer(serializers.ModelSerializer):
 class NoticeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notice
-        fields = ('title', 'content', 'updated_at')
+        fields = ('id', 'title', 'content', 'updated_at')
