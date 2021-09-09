@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Review, Question
+from .models import Review, Question, Notice
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -12,3 +12,9 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'useremail', 'type', 'title', 'content', 'updated_at')
+
+
+class NoticeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notice
+        fields = ('title', 'content', 'updated_at')
