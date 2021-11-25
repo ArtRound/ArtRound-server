@@ -26,3 +26,9 @@ class Notice(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Favorites(models.Model):
+    title = models.CharField(max_length=50)
+    content = models.TextField()
+    updated_at = models.DateTimeField(auto_now=True)
