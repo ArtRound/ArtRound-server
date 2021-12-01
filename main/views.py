@@ -164,7 +164,7 @@ class FavoritesList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class NoticeDetail(APIView):
+class FavoritesDetail(APIView):
     # Favorites 객체 가져오기
     def get_object(self, pk):
         try:
