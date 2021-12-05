@@ -35,7 +35,10 @@ class FavoritesSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'spouse_name', 'date_of_birth']
+        fields = ['id', 'email', 'first_name', 'last_name', 'name']
+
+# id, password, last_login, is_superuser, first_name, last_name, date_joined
+# email, name, is_admin, is_active, created_at, updated_at
 
 class CustomTokenRefreshSerializer(serializers.Serializer):
     refresh_token = serializers.CharField()
