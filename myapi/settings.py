@@ -31,7 +31,14 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 REST_FRAMEWORK = {
-    'DATE_FORMAT': '%Y.%m.%d'
+    'DATE_FORMAT': '%Y.%m.%d',
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ),
 }
 
 INSTALLED_APPS = [
@@ -45,6 +52,10 @@ INSTALLED_APPS = [
     'main',
     'rest_framework',
     'corsheaders',
+
+    'rest_framework_simplejwt.token_blacklist',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
 
      # allauth
     'allauth', 
@@ -163,3 +174,15 @@ SITE_ID = 2
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REOIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
+
+
+REST_USE_JWT = True
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
