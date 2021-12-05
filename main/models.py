@@ -8,7 +8,7 @@ class Review(models.Model):
     content = models.TextField()
     useremail = models.EmailField(max_length=128, null=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    image = models.ImageField(blank=True)
 
 class Question(models.Model):
     QUESTION_CHOICES = {
