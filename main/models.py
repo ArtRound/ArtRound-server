@@ -21,6 +21,10 @@ class Question(models.Model):
     content = models.TextField()
     updated_at = models.DateField(auto_now=True)
 
+class Answer(models.Model):
+    content = models.TextField()
+    updated_at = models.DateField(auto_now=True)
+
 
 class Notice(models.Model):
     title = models.CharField(max_length=50)
