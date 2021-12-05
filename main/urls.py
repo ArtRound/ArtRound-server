@@ -5,6 +5,7 @@ from .views import QuestionList, QuestionDetail
 from .views import AnswerList, AnswerDetail
 from .views import NoticeList, NoticeDetail
 from .views import FavoritesList, FavoritesDetail
+from main import views
 
 urlpatterns = [
     # path('hello/', helloAPI),
@@ -19,6 +20,11 @@ urlpatterns = [
     path('notice/<int:pk>/', NoticeDetail.as_view()),
     path('favorites/', FavoritesList.as_view()),
     path('favorites/<int:pk>', FavoritesDetail.as_view()),
+
+    path('kakao/login/', views.kakao_login, name='kakao_login'),
+    path('kakao/callback/', views.kakao_callback, name='kakao_callback'),
+    path('kakao/login/finish/', views.KakaoLogin.as_view(),
+         name='kakao_login_todjango'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
