@@ -250,7 +250,7 @@ class FavoritesDetail(APIView):
 #--------------------------------------------------------------------------------
 
 BASE_URL = 'http://localhost:8000/'
-KAKAO_CALLBACK_URI = BASE_URL + 'main/kakao/callback/'
+KAKAO_CALLBACK_URI = BASE_URL + 'main/kakao/callback'
 
 def kakao_login(request):
     rest_api_key = getattr(settings, 'KAKAO_REST_API_KEY')
@@ -331,7 +331,7 @@ class KakaoLogin(SocialLoginView):
    
 #--------------------------------------------------------------------------------
 
-GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
+GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback'
 
 def google_login(request):
     # Code Request
