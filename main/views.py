@@ -333,6 +333,7 @@ class KakaoLogin(SocialLoginView):
 #--------------------------------------------------------------------------------
 
 GOOGLE_CALLBACK_URI = BASE_URL + 'main/login//google/callback'
+state = "a9dfjGJwkAQek3G"
 
 def google_login(request):
     # Code Request
