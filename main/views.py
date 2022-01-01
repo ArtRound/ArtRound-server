@@ -249,8 +249,8 @@ class FavoritesDetail(APIView):
      
 #--------------------------------------------------------------------------------
 
-BASE_URL = 'http://localhost:8000/'
-KAKAO_CALLBACK_URI = BASE_URL + 'main/login/kakao/callback'
+BASE_URL = 'http://localhost:3000/'
+KAKAO_CALLBACK_URI = BASE_URL + 'main/login/kakao'
 
 def kakao_login(request):
     rest_api_key = getattr(settings, 'KAKAO_REST_API_KEY')
@@ -263,15 +263,20 @@ def kakao_callback(request):
     rest_api_key = getattr(settings, 'KAKAO_REST_API_KEY')
     code = request.GET.get("code")
     redirect_uri = KAKAO_CALLBACK_URI
-    
+
     # Access Token Request
     token_req = requests.get(
         f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_uri={redirect_uri}&code={code}")
+    # token_req = requests.get(
+    #     f"https://{KAKAO_CALLBACK_URI}?code={code}")
     token_req_json = token_req.json()
     error = token_req_json.get("error")
+
     if error is not None:
         raise JSONDecodeError(error)
     access_token = token_req_json.get("access_token")
+
+    print('access_token',access_token)
     
     # Email Request
     profile_request = requests.get(
