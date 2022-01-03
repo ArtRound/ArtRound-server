@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-o@jaf7_ynuq%%82&u9+^%99ben6nar&@=9ppaywj15hzn!ru7*'
-KAKAO_REST_API_KEY = 'c37df5dcd385644681a3ec4267ac8d18'
+KAKAO_REST_API_KEY = '4cabd9184b71cb231252329034193534'
 SOCIAL_AUTH_GOOGLE_CLIENT_ID = '857984581355-3ikddqj15n9bdma5rt4ahr2ipltuublp.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_SECRET = 'RFlNZYfFbPyFfv3HjM5VL0hY'
 
@@ -85,7 +85,28 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:3000', 'http://localhost:3000')
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
 
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
 
 ROOT_URLCONF = 'myapi.urls'
 

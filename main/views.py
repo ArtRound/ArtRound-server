@@ -252,7 +252,6 @@ class FavoritesDetail(APIView):
      
 #--------------------------------------------------------------------------------
 
-
 KAKAO_CALLBACK_URI = 'http://localhost:3000/main/login/kakao'
 
 def kakao_login(request):
