@@ -263,67 +263,64 @@ def kakao_login(request):
 class KakaoLogin(SocialLoginView):
     adapter_class = kakao_view.KakaoOAuth2Adapter
     client_class = OAuth2Client
-    callback_url = KAKAO_CALLBACK_URI  
-     
-    def login(self, request):
+    
+    def post(self, request):
         load_dotenv(verbose=True)
         SECRET_KEY = os.getenv("SECRET_KEY")
         ALGORITHM = os.getenv("ALGORITHM")
         
-        kakao_access_token = json.loads(requests.body)
-        print(kakao_access_token["params"]["code"])
+        kakao_access_token = json.loads(request.data['data'])
+        print(kakao_access_token)
+        
         url = "https://kapi.kakao.com/v2/user/me"
-        real_code = kakao_access_token["params"]["code"]
         
         headers = {
-                "Authorization":f"Bearer {real_code}",
+                "Authorization":f"Bearer {kakao_access_token}",
                 "Content-type":"application/x-www-form-urlencoded; charset=utf-8"
             }
         
         kakao_response = requests.post(url, headers=headers)
         kakao_response = json.loads(kakao_response.text)
         
-        if User.objects.filter(uid=kakao_response['id']).exists():
-            user    = User.objects.get(uid=kakao_response['id'])
-            jwt_token = jwt.encode({'id':user.uid}, SECRET_KEY,ALGORITHM)
-            print(jwt_token,type(jwt_token))
-            if type(jwt_token) is bytes : 
-                jwt_token=jwt_token.decode('utf-8')
-                print(jwt_token,"fixed")
-            
-            res=JsonResponse({"result":"true"})
-            res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-            res["Access-Control-Allow-Credentials"]="true"
-            # res["Access-Control-Allow-Origin"] = "https://1n1n.io"
-            res["Acess-Control-Max-Age"] = "1000"
-            res["Access-Control-Allow-Headers"] = "X-Requested-With, Origin, X-Csrftoken, Content-Type, Accept"
-            res.set_cookie(key="access_token",value=jwt_token,samesite=None,httponly=True,secure=True)
-            return res
-
-        else:
+        if not User.objects.filter(id = kakao_response['id']).exists():
+            user = User.objects.create(
+                id = kakao_response['id'],
+                email = kakao_response['kakao_account']['email'],
+                name = kakao_response['kakao_account']['profile']['nickname']
+            )
             q = User.objects.annotate(Count("name"))
-            print(q.count())
-            print(kakao_response['kakao_account']['gender'])
-            if kakao_response['kakao_account']['gender']=="male":
-                gender=0
-            else:
-                gender=1            
+            print(q.count())      
                 
             jwt_token = jwt.encode({'id':kakao_response['id']}, SECRET_KEY, ALGORITHM)
             print(jwt_token,type(jwt_token))
             if type(jwt_token) is bytes : 
-                jwt_token=jwt_token.decode('utf-8')
+                jwt_token = jwt_token.decode('utf-8')
+                print(jwt_token, "fixed")
+            res = JsonResponse({"result":"false","id":kakao_response["id"],"email":kakao_response['kakao_account'].get('email',None),})
+            res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+            res["Access-Control-Allow-Credentials"] = "true"
+            # res["Access-Control-Allow-Origin"] = "https://1n1n.io"
+            res["Acess-Control-Max-Age"] = "1000"
+            res["Access-Control-Allow-Headers"] = "X-Requested-With, Origin, X-Csrftoken, Content-Type, Accept"
+            res.set_cookie(key="access_token", value=jwt_token, samesite=None, httponly=True, secure=True)
+            return res
+
+        else:
+            user = User.objects.get(id=kakao_response['id'])
+            jwt_token = jwt.encode({'id':user.id}, SECRET_KEY,ALGORITHM)
+            print(jwt_token,type(jwt_token))
+            if type(jwt_token) is bytes : 
+                jwt_token = jwt_token.decode('utf-8')
                 print(jwt_token,"fixed")
-            res=JsonResponse({"result":"false","uid":kakao_response["id"],"email":kakao_response['kakao_account'].get('email',None),})
+            
+            res = JsonResponse({"result":"true"})
             res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             res["Access-Control-Allow-Credentials"]="true"
             # res["Access-Control-Allow-Origin"] = "https://1n1n.io"
             res["Acess-Control-Max-Age"] = "1000"
             res["Access-Control-Allow-Headers"] = "X-Requested-With, Origin, X-Csrftoken, Content-Type, Accept"
-            res.set_cookie(key="access_token",value=jwt_token,samesite=None,httponly=True,secure=True)
-            return res
-
-
+            res.set_cookie(key="access_token", value=jwt_token, samesite=None, httponly=True, secure=True)
+            return res            
 
 #--------------------------------------------------------------------------------
 
