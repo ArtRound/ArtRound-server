@@ -22,7 +22,7 @@ urlpatterns = [
     path('favorites/<int:pk>', FavoritesDetail.as_view()),
 
     path('login/kakao/', views.kakao_login, name='kakao_login'),
-    path('login/kakao/callback', views.kakao_callback, name='kakao_callback'),
+    # path('login/kakao/callback', views.kakao_callback, name='kakao_callback'),
     path('login/kakao/finish/', views.KakaoLogin.as_view(), name='kakao_login_todjango'),
 
     path('login/google', views.google_login, name='google_login'),
