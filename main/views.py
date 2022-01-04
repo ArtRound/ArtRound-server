@@ -289,7 +289,6 @@ class KakaoLogin(SocialLoginView):
             print('새로 가입')
             user = User.objects.create(
                 id = kakao_response['id'],
-       
             )
             q = User.objects.annotate(Count("id"))
             print(q.count())      
@@ -316,13 +315,14 @@ class KakaoLogin(SocialLoginView):
             q = User.objects.annotate(Count("id"))
             print(q.count())
             
-            user = User.objects.filter(id = kakao_response['id'])
+            user = User.objects.get(id = kakao_response['id'])
+            
             jwt_token = jwt.encode({'id':kakao_response['id']}, SECRET_KEY, ALGORITHM)
             print(jwt_token,type(jwt_token))
             if type(jwt_token) is bytes : 
                 jwt_token = jwt_token.decode('utf-8')
                 print(jwt_token,"fixed")
-            print(user)
+            
             res = JsonResponse({"result":"true", "jwt_token": jwt_token, "id":kakao_response["id"],  "name": user.id, "age":user.age, "gender":user.gender})
             res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             res["Access-Control-Allow-Credentials"]="true"
