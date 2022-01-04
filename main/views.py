@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.db.models import Count
 from dotenv import load_dotenv
 import os, requests, json, jwt
@@ -329,14 +329,14 @@ class KakaoLogin(SocialLoginView):
             # res["Access-Control-Allow-Origin"] = "https://1n1n.io"
             res["Acess-Control-Max-Age"] = "1000"
             res["Access-Control-Allow-Headers"] = "X-Requested-With, Origin, X-Csrftoken, Content-Type, Accept"
-            res.set_cookie(key="jwt_token",value=jwt_token,samesite=None,httponly=True,secure=True)
+            res.set_cookie(key="jwt_token", value=jwt_token, samesite=None, httponly=True, secure=True)
             return res    
 
 
 
 #--------------------------------------------------------------------------------
 
-GOOGLE_CALLBACK_URI = 'http://localhost:3000/main/login/google/callback'
+GOOGLE_CALLBACK_URI = 'http://localhost:3000/main/login/google'
 state = "a9dfjGJwkAQek3G"
 
 def google_login(request):
@@ -344,72 +344,44 @@ def google_login(request):
     scope = "https://www.googleapis.com/auth/userinfo.email"
     client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
     return redirect(f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
-# 이 함수와 매핑된 url로 들어가면, client_id, redirect uri 등과 같은 정보를 
-# url parameter로 함께 보내 리다이렉트한다. 
-# 그러면 구글 로그인 창이 뜨고, 알맞은 아이디, 비밀번호로 진행하면 
-# Callback URI로 Code값이 들어가게 된다.
-
-def google_callback(request):
-    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
-    client_secret = getattr(settings, "SOCIAL_AUTH_GOOGLE_SECRET")
-    code = request.GET.get('code')
-
-    # Access Token Request
-    # 받은 Code로 Google에 Access Token 요청
-    token_req = requests.post(
-        f"https://oauth2.googleapis.com/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}&state={state}")
-    token_req_json = token_req.json()
-    error = token_req_json.get("error")
-    if error is not None:
-        raise JSONDecodeError(error)
-    access_token = token_req_json.get('access_token')
-
-    # Email Request
-    # Access Token으로 Email 값을 Google에게 요청
-    email_req = requests.get(
-        f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
-    email_req_status = email_req.status_code
-    if email_req_status != 200:
-        return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
-    email_req_json = email_req.json()
-    email = email_req_json.get('email')
-    
-    # Signup or Signin Request
-    # 전달받은 Email, Access Token, Code를 바탕으로 회원가입/로그인 진행
-    try:
-        user = User.objects.get(email=email)
-        # 기존에 가입된 유저의 Provider가 google이 아니면 에러 발생, 맞으면 로그인
-        # 다른 SNS로 가입된 유저
-        social_user = SocialAccount.objects.get(user=user)
-        if social_user is None:
-            return JsonResponse({'err_msg': 'email exists but not social user'}, status=status.HTTP_400_BAD_REQUEST)
-        if social_user.provider != 'google':
-            return JsonResponse({'err_msg': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # 기존에 Google로 가입된 유저
-        data = {'access_token': access_token, 'code': code}
-        accept = requests.post(
-            f"http://localhost:3000/main/login/google/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({'err_msg': 'failed to signin'}, status=accept_status)
-        accept_json = accept.json()
-        accept_json.pop('user', None)
-        return JsonResponse(accept_json)
-
-    except User.DoesNotExist:
-        # 기존에 가입된 유저가 없으면 새로 가입
-        data = {'access_token': access_token, 'code': code}
-        accept = requests.post(
-            f"http://localhost:3000/main/login/google/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({'err_msg': 'failed to signup'}, status=accept_status)
-        accept_json = accept.json()
-        accept_json.pop('user', None)
-        return JsonResponse(accept_json)
 
 class GoogleLogin(SocialLoginView):
     adapter_class = google_view.GoogleOAuth2Adapter
     callback_url = GOOGLE_CALLBACK_URI
     client_class = OAuth2Client
+    
+    def post(self, request):
+        load_dotenv(verbose=True)
+        SECRET_KEY = os.getenv("SECRET_KEY")
+        ALGORITHM = os.getenv("ALGORITHM")
+        
+        access_token = json.loads(request.body)
+        print(access_token)
+        
+        google_id = access_token["params"]["code"]["profileObj"]["googleId"]
+        google_name = access_token["params"]["code"]["profileObj"]["name"]
+        google_email = access_token["params"]["code"]["profileObj"]["email"]
+        print(google_email, google_name, google_id)
+        
+        # 새로 가입했을 때
+        if not User.objects.filter(id = google_id).exists():
+            user = User.objects.create(
+                id = google_id,
+            )
+            jwt_token = jwt.encode({'id':google_id}, SECRET_KEY, ALGORITHM)
+            print(jwt_token)
+            
+            res = HttpResponse({"success":True})
+            res.set_cookie(key="access_token", value=jwt_token, httponly=True, secure=True)
+            
+            return res
+        
+        # 이미 가입되어있을 때
+        else:     
+            user = User.objects.get(id = google_id)
+            jwt_token = jwt.encode({'id':user.id}, SECRET_KEY, ALGORITHM)
+            print(jwt_token)
+            
+            res = HttpResponse({"success":True})
+            res.set_cookie(key="access_token", value=jwt_token, httponly=True, secure=True)
+            return res       

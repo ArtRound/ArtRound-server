@@ -5,7 +5,7 @@ from .views import QuestionList, QuestionDetail
 from .views import AnswerList, AnswerDetail
 from .views import NoticeList, NoticeDetail
 from .views import FavoritesList, FavoritesDetail
-from .views import KakaoLogin
+from .views import KakaoLogin, GoogleLogin
 from main import views
 
 urlpatterns = [
@@ -23,12 +23,10 @@ urlpatterns = [
     path('favorites/<int:pk>', FavoritesDetail.as_view()),
 
     path('login/kakao/', views.kakao_login, name='kakao_login'),
-    # path('login/kakao/callback', views.kakao_callback, name='kakao_callback'),
     path('login/kakao/finish/', KakaoLogin.as_view(), name='kakao_login_todjango'),
 
     path('login/google', views.google_login, name='google_login'),
-    path('login/google/callback', views.google_callback,      name='google_callback'),  
-    path('login/google/finish/', views.GoogleLogin.as_view(), name='google_login_todjango'),
+    path('login/google/finish/', GoogleLogin.as_view(), name='google_login_todjango'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
