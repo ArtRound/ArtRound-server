@@ -299,7 +299,7 @@ class KakaoLogin(SocialLoginView):
                 jwt_token = jwt_token.decode('utf-8')
                 print(jwt_token, "fixed")
             # res = JsonResponse({"result":"false","id":kakao_response["id"],"email":kakao_response['kakao_account'].get('email',None),})
-            res = JsonResponse({"result":"false","id":kakao_response["id"], "name": None, "age":0, "gender":None})
+            res = JsonResponse({"existing_user":"false","id":kakao_response["id"], "name": None, "age":0, "gender":None})
 
             res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             res["Access-Control-Allow-Credentials"] = "true"
@@ -323,7 +323,7 @@ class KakaoLogin(SocialLoginView):
                 jwt_token = jwt_token.decode('utf-8')
                 print(jwt_token,"fixed")
             
-            res = JsonResponse({"result":"true", "jwt_token": jwt_token, "id":kakao_response["id"],  "name": user.id, "age":user.age, "gender":user.gender})
+            res = JsonResponse({"existing_user":"true", "jwt_token": jwt_token, "id":kakao_response["id"],  "name": user.id, "age":user.age, "gender":user.gender})
             res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             res["Access-Control-Allow-Credentials"]="true"
             # res["Access-Control-Allow-Origin"] = "https://1n1n.io"
