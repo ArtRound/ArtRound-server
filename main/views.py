@@ -323,7 +323,7 @@ class KakaoLogin(SocialLoginView):
                 jwt_token = jwt_token.decode('utf-8')
                 print(jwt_token,"fixed")
             
-            res = JsonResponse({"result":"true"})
+            res = JsonResponse({"result":"true", "jwt_token": jwt_token, "id":kakao_response["id"]})
             res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             res["Access-Control-Allow-Credentials"]="true"
             # res["Access-Control-Allow-Origin"] = "https://1n1n.io"
