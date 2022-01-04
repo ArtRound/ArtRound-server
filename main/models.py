@@ -42,12 +42,12 @@ class Favorites(models.Model):
 
 
 class User(AbstractUser):
-    MAN = 1
-    WOMAN = 0
-    GENDER_CHOICE = [
-        (MAN, "남성"),
-        (WOMAN, "여성"),
-    ]
+    # MAN = 1
+    # WOMAN = 0
+    # GENDER_CHOICE = [
+    #     (MAN, "남성"),
+    #     (WOMAN, "여성"),
+    # ]
     
     username = None
     id = models.BigAutoField(primary_key=True)
@@ -57,8 +57,8 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    gender = models.IntegerField(choices=GENDER_CHOICE, default="", blank=True)
-    age = models.IntegerField(default="", blank=True)
+    # gender = models.IntegerField(choices=GENDER_CHOICE, default="", blank=True)
+    # age = models.IntegerField(default="", blank=True)
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'

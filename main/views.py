@@ -264,6 +264,14 @@ class KakaoLogin(SocialLoginView):
     adapter_class = kakao_view.KakaoOAuth2Adapter
     client_class = OAuth2Client
     callback_url = KAKAO_CALLBACK_URI  
+
+    def post(self, request):
+        load_dotenv(verbose=True)
+        SECRET_KEY = os.getenv("SECRET_KEY")
+        ALGORITHM = os.getenv("ALGORITHM")
+        
+        kakao_access_token = json.loads(requests.body)
+        print(kakao_access_token["params"]["code"])    
      
     def login(self, request):
         load_dotenv(verbose=True)
@@ -274,7 +282,7 @@ class KakaoLogin(SocialLoginView):
         print(kakao_access_token["params"]["code"])
         url = "https://kapi.kakao.com/v2/user/me"
         real_code = kakao_access_token["params"]["code"]
-        
+
         headers = {
                 "Authorization":f"Bearer {real_code}",
                 "Content-type":"application/x-www-form-urlencoded; charset=utf-8"
@@ -303,11 +311,11 @@ class KakaoLogin(SocialLoginView):
         else:
             q = User.objects.annotate(Count("name"))
             print(q.count())
-            print(kakao_response['kakao_account']['gender'])
-            if kakao_response['kakao_account']['gender']=="male":
-                gender=0
-            else:
-                gender=1            
+            # print(kakao_response['kakao_account']['gender'])
+            # if kakao_response['kakao_account']['gender']=="male":
+            #     gender=0
+            # else:
+            #     gender=1            
                 
             jwt_token = jwt.encode({'id':kakao_response['id']}, SECRET_KEY, ALGORITHM)
             print(jwt_token,type(jwt_token))
@@ -321,7 +329,7 @@ class KakaoLogin(SocialLoginView):
             res["Acess-Control-Max-Age"] = "1000"
             res["Access-Control-Allow-Headers"] = "X-Requested-With, Origin, X-Csrftoken, Content-Type, Accept"
             res.set_cookie(key="access_token",value=jwt_token,samesite=None,httponly=True,secure=True)
-            return res
+            return res    
 
 
 
