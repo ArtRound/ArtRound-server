@@ -271,15 +271,6 @@ class KakaoLogin(SocialLoginView):
         ALGORITHM = os.getenv("ALGORITHM")
         
         kakao_access_token = json.loads(request.body)
-        print(kakao_access_token["params"]["code"])
-        return JsonResponse({"result" : "success"})    
-     
-    def login(self, request):
-        load_dotenv(verbose=True)
-        SECRET_KEY = os.getenv("SECRET_KEY")
-        ALGORITHM = os.getenv("ALGORITHM")
-        
-        kakao_access_token = json.loads(request)
         print(kakao_access_token)
         
         url = "https://kapi.kakao.com/v2/user/me"
@@ -296,10 +287,10 @@ class KakaoLogin(SocialLoginView):
         if not User.objects.filter(id = kakao_response['id']).exists():
             user = User.objects.create(
                 id = kakao_response['id'],
-                email = kakao_response['kakao_account']['email'],
-                name = kakao_response['kakao_account']['profile']['nickname']
+                # email = kakao_response['kakao_account']['email'] if kakao_response['kakao_account'].get('email') else None,
+                # name = kakao_response['kakao_account']['profile']['nickname']
             )
-            q = User.objects.annotate(Count("name"))
+            q = User.objects.annotate(Count("id"))
             print(q.count())      
                 
             jwt_token = jwt.encode({'id':kakao_response['id']}, SECRET_KEY, ALGORITHM)
@@ -307,7 +298,8 @@ class KakaoLogin(SocialLoginView):
             if type(jwt_token) is bytes : 
                 jwt_token = jwt_token.decode('utf-8')
                 print(jwt_token, "fixed")
-            res = JsonResponse({"result":"false","id":kakao_response["id"],"email":kakao_response['kakao_account'].get('email',None),})
+            # res = JsonResponse({"result":"false","id":kakao_response["id"],"email":kakao_response['kakao_account'].get('email',None),})
+            res = JsonResponse({"result":"false","id":kakao_response["id"]})
             res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             res["Access-Control-Allow-Credentials"] = "true"
             # res["Access-Control-Allow-Origin"] = "https://1n1n.io"
@@ -317,7 +309,7 @@ class KakaoLogin(SocialLoginView):
             return res
 
         else:
-            q = User.objects.annotate(Count("name"))
+            q = User.objects.annotate(Count("id"))
             print(q.count())
             # print(kakao_response['kakao_account']['gender'])
             # if kakao_response['kakao_account']['gender']=="male":
