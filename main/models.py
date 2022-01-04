@@ -49,20 +49,20 @@ class User(AbstractUser):
     #     (WOMAN, "여성"),
     # ]
     
-    username = None
+    # username = models.CharField(default="username", max_length=10)
     id = models.BigAutoField(primary_key=True)
-    email = models.EmailField()
-    name = models.CharField(max_length=10)
+    email = models.EmailField(default="")
+    name = models.CharField(default="", max_length=10)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # gender = models.IntegerField(choices=GENDER_CHOICE, default="", blank=True)
-    # age = models.IntegerField(default="", blank=True)
+    gender = models.CharField(default="남자", blank=True, max_length=5)
+    age = models.IntegerField(default=1, blank=True)
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    # USERNAME_FIELD = 'email'
+    # REQUIRED_FIELDS = ['name']
 
     def __str__(self):
         return self.email
