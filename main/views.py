@@ -270,22 +270,23 @@ class KakaoLogin(SocialLoginView):
         SECRET_KEY = os.getenv("SECRET_KEY")
         ALGORITHM = os.getenv("ALGORITHM")
         
-        kakao_access_token = json.loads(requests.body)
-        print(kakao_access_token["params"]["code"])    
+        kakao_access_token = json.loads(request.body)
+        print(kakao_access_token["params"]["code"])
+        return JsonResponse({"result" : "success"})    
      
     def login(self, request):
         load_dotenv(verbose=True)
         SECRET_KEY = os.getenv("SECRET_KEY")
         ALGORITHM = os.getenv("ALGORITHM")
         
-        kakao_access_token = json.loads(request.data['data'])
+        kakao_access_token = json.loads(request)
         print(kakao_access_token)
         
         url = "https://kapi.kakao.com/v2/user/me"
         real_code = kakao_access_token["params"]["code"]
 
         headers = {
-                "Authorization":f"Bearer {kakao_access_token}",
+                "Authorization":f"Bearer {real_code}",
                 "Content-type":"application/x-www-form-urlencoded; charset=utf-8"
             }
         
