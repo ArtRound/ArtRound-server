@@ -315,6 +315,7 @@ class KakaoLogin(SocialLoginView):
             print('가입되어있음')
             q = User.objects.annotate(Count("id"))
             print(q.count())
+            
             user = User.objects.filter(id = kakao_response['id'])
             jwt_token = jwt.encode({'id':kakao_response['id']}, SECRET_KEY, ALGORITHM)
             print(jwt_token,type(jwt_token))

@@ -49,7 +49,7 @@ class User(AbstractUser):
     #     (WOMAN, "여성"),
     # ]
     
-    # username = models.CharField(default="username", max_length=10)
+    username = None
     id = models.BigAutoField(primary_key=True)
     email = models.EmailField(default="")
     name = models.CharField(default="", max_length=10)
@@ -61,8 +61,8 @@ class User(AbstractUser):
     age = models.IntegerField(default=1, blank=True)
     objects = CustomUserManager()
 
-    # USERNAME_FIELD = 'email'
-    # REQUIRED_FIELDS = ['name']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name']
 
     def __str__(self):
         return self.email
