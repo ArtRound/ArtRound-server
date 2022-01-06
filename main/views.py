@@ -332,8 +332,6 @@ class KakaoLogin(SocialLoginView):
             res.set_cookie(key="jwt_token", value=jwt_token, samesite=None, httponly=True, secure=True)
             return res    
 
-
-
 #--------------------------------------------------------------------------------
 
 GOOGLE_CALLBACK_URI = 'http://localhost:3000/main/login/google'
@@ -385,3 +383,17 @@ class GoogleLogin(SocialLoginView):
             res = HttpResponse({"success":True})
             res.set_cookie(key="access_token", value=jwt_token, httponly=True, secure=True)
             return res       
+
+#--------------------------------------------------------------------------------
+
+class Add_info(APIView):
+    def post(self, request):
+        user = json.loads(request.body)
+        User(
+            id = user['params']['id'],
+            gender = user['params']['gender'],
+            age = user['params']['age']
+        ).save()
+        
+        return JsonResponse({"data":True})
+        

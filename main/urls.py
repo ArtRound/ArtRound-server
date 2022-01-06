@@ -6,6 +6,7 @@ from .views import AnswerList, AnswerDetail
 from .views import NoticeList, NoticeDetail
 from .views import FavoritesList, FavoritesDetail
 from .views import KakaoLogin, GoogleLogin
+from .views import Add_info
 from main import views
 
 urlpatterns = [
@@ -27,6 +28,8 @@ urlpatterns = [
 
     path('login/google', views.google_login, name='google_login'),
     path('login/google/finish/', GoogleLogin.as_view(), name='google_login_todjango'),
+    
+    path('add_info', Add_info.as_views(), name='add_info')
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
