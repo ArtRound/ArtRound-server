@@ -9,7 +9,7 @@ from .managers import CustomUserManager
 class Review(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
-    useremail = models.EmailField(max_length=128, null=True)
+    user_id = models.ForeignKey('User', related_name='review', on_delete=models.CASCADE, db_column='user_id')
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(blank=True)
 
@@ -18,7 +18,7 @@ class Question(models.Model):
         ('report', 'report'), ('login', 'login'),
         ('use', 'use'), ('proposal', 'proposal'), ('etc', 'etc')
     }
-    useremail = models.EmailField(max_length=128)
+    user_id = models.ForeignKey('User', related_name='question', on_delete=models.CASCADE, db_column='user_id')
     type = models.CharField(max_length=80, choices=QUESTION_CHOICES, null=True)
     title = models.CharField(max_length=50)
     content = models.TextField()
@@ -42,16 +42,8 @@ class Favorites(models.Model):
 
 
 class User(AbstractUser):
-    # MAN = 1
-    # WOMAN = 0
-    # GENDER_CHOICE = [
-    #     (MAN, "남성"),
-    #     (WOMAN, "여성"),
-    # ]
-    
     username = None
     id = models.BigAutoField(primary_key=True)
-    email = models.EmailField(default="")
     name = models.CharField(default="", max_length=10)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -61,11 +53,11 @@ class User(AbstractUser):
     age = models.IntegerField(default=1, blank=True)
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['name']
 
     def __str__(self):
-        return self.email
+        return str(self.id)
 
     def has_perm(self, perm, obj=None):
         return True

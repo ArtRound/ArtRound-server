@@ -389,6 +389,7 @@ class GoogleLogin(SocialLoginView):
 class Add_info(APIView):
     def post(self, request):
         user_info = json.loads(request.body)
+        print(user_info)
         user = User.objects.get(id = user_info['params']['id'])
         User(
             id = user_info['params']['id'],
