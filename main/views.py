@@ -283,23 +283,27 @@ class KakaoLogin(SocialLoginView):
         
         kakao_response = requests.post(url, headers=headers)
         kakao_response = json.loads(kakao_response.text)
+        print(kakao_response['kakao_account']['profile'])
 
         # 새로 가입했을 때
         if not User.objects.filter(id = kakao_response['id']).exists():
             print('새로 가입')
             user = User.objects.create(
                 id = kakao_response['id'],
+                profile_image = kakao_response['kakao_account']['profile']['profile_image_url']
             )
             q = User.objects.annotate(Count("id"))
             print(q.count())      
                 
             jwt_token = jwt.encode({'id':kakao_response['id']}, SECRET_KEY, ALGORITHM)
-            print(jwt_token,type(jwt_token))
+            print(jwt_token, type(jwt_token))
             if type(jwt_token) is bytes : 
                 jwt_token = jwt_token.decode('utf-8')
                 print(jwt_token, "fixed")
             # res = JsonResponse({"result":"false","id":kakao_response["id"],"email":kakao_response['kakao_account'].get('email',None),})
-            res = JsonResponse({"existing_user":"false","id":kakao_response["id"], "name": None, "age":0, "gender":None})
+            res = JsonResponse({"existing_user":"false",
+                                "id":kakao_response["id"], "profile_image":kakao_response['kakao_account']['profile']['profile_image_url'], 
+                                "name": None, "age":0, "gender":None})
 
             res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             res["Access-Control-Allow-Credentials"] = "true"
@@ -323,7 +327,9 @@ class KakaoLogin(SocialLoginView):
                 jwt_token = jwt_token.decode('utf-8')
                 print(jwt_token,"fixed")
             
-            res = JsonResponse({"existing_user":"true", "jwt_token": jwt_token, "id":kakao_response["id"],  "name": user.id, "age":user.age, "gender":user.gender})
+            res = JsonResponse({"existing_user":"true", "jwt_token": jwt_token, 
+                                "id":kakao_response["id"],  "profile_image":kakao_response['kakao_account']['profile']['profile_image_url'], 
+                                "name": user.id, "age":user.age, "gender":user.gender})
             res["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
             res["Access-Control-Allow-Credentials"]="true"
             # res["Access-Control-Allow-Origin"] = "https://1n1n.io"

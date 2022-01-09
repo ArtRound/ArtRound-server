@@ -51,6 +51,7 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
     gender = models.CharField(default="남자", blank=True, max_length=5)
     age = models.IntegerField(default=1, blank=True)
+    profile_image = models.CharField(default="", blank=True, max_length=100)
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'id'
