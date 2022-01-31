@@ -18,7 +18,7 @@ from allauth.socialaccount.providers.google import views as google_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 
-from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer
+from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, UserSerializer
 from .models import Review, Question, Answer, Notice, Favorites, User
 
 
@@ -406,4 +406,11 @@ class Add_info(APIView):
         ).save()
         
         return JsonResponse({"data":True})
-        
+
+class Get_info(APIView):    
+    def get(self, request):
+        info = User.objects.all()
+        serializer = UserSerializer(info, many=True)
+        print(serializer.data)
+        # 임의로 넣어둔 숫자 [0] 수정해야함.(가입된 사용자 번호) 지금 사용자가 한명이라 [0]으로 테스트해보는 것
+        return JsonResponse({"name": serializer.data[0]['name']})
