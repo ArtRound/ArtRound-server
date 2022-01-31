@@ -411,6 +411,5 @@ class Get_info(APIView):
     def get(self, request):
         info = User.objects.all()
         serializer = UserSerializer(info, many=True)
-        print(serializer.data)
         # 임의로 넣어둔 숫자 [0] 수정해야함.(가입된 사용자 번호) 지금 사용자가 한명이라 [0]으로 테스트해보는 것
-        return JsonResponse({"name": serializer.data[0]['name']})
+        return JsonResponse({"name": serializer.data[0]['name'], "age": serializer.data[0]['age'],"gender": serializer.data[0]['gender'], 'profile_image':serializer.data[0]['profile_image']})
