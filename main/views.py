@@ -18,6 +18,9 @@ from allauth.socialaccount.providers.google import views as google_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import AllowAny
+
 from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, UserSerializer
 from .models import Review, Question, Answer, Notice, Favorites, User
 
@@ -407,9 +410,22 @@ class Add_info(APIView):
         
         return JsonResponse({"data":True})
 
-class Get_info(APIView):    
-    def get(self, request):
-        info = User.objects.all()
-        serializer = UserSerializer(info, many=True)
-        # 임의로 넣어둔 숫자 [0] 수정해야함.(가입된 사용자 번호) 지금 사용자가 한명이라 [0]으로 테스트해보는 것
-        return JsonResponse({"name": serializer.data[0]['name'], "age": serializer.data[0]['age'],"gender": serializer.data[0]['gender'], 'profile_image':serializer.data[0]['profile_image']})
+class Get_info(APIView):
+    def get(self, request, pk):
+        user = User.objects.filter(pk=pk)
+        print(pk)
+        serializer = UserSerializer(user,many=True)
+        return Response(serializer.data, content_type='application/json; charset=utf-8')
+
+
+    # def get_object(self, pk):
+    # try:
+    #     return Notice.objects.get(pk=pk)
+    # except Notice.DoesNotExist:
+    #     raise Http404
+
+    # # Notice Read
+    # def get(self, request, pk, format=None):
+    #     notice = self.get_object(pk)
+    #     serializer = NoticeSerializer(notice)
+    #     return Response(serializer.data)

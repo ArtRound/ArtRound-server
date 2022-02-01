@@ -30,7 +30,7 @@ urlpatterns = [
     path('login/google/finish/', GoogleLogin.as_view(), name='google_login_todjango'),
     
     path('add_info/', Add_info.as_view(), name='add_info'),
-    path('get_info/', Get_info.as_view(), name='get_info')
+    path('get_info/<int:pk>/', Get_info.as_view(), name='get_info')
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
