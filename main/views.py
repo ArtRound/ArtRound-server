@@ -395,7 +395,7 @@ class GoogleLogin(SocialLoginView):
 
 #--------------------------------------------------------------------------------
 
-class Add_info(APIView):
+class AddInfo(APIView):
     def post(self, request):
         user_info = json.loads(request.body)
         print(user_info)
@@ -410,22 +410,9 @@ class Add_info(APIView):
         
         return JsonResponse({"data":True})
 
-class Get_info(APIView):
+class GetInfo(APIView):
     def get(self, request, pk):
         user = User.objects.filter(pk=pk)
         print(pk)
         serializer = UserSerializer(user,many=True)
         return Response(serializer.data, content_type='application/json; charset=utf-8')
-
-
-    # def get_object(self, pk):
-    # try:
-    #     return Notice.objects.get(pk=pk)
-    # except Notice.DoesNotExist:
-    #     raise Http404
-
-    # # Notice Read
-    # def get(self, request, pk, format=None):
-    #     notice = self.get_object(pk)
-    #     serializer = NoticeSerializer(notice)
-    #     return Response(serializer.data)
