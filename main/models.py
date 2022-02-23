@@ -11,6 +11,7 @@ class Review(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
     user_id = models.ForeignKey('User', related_name='review', on_delete=models.CASCADE, db_column='user_id')
+    # art_info_id = models.ForeignKey('ArtInfo', related_name='review', on_delete=models.CASCADE, db_column='art_info_id')
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(blank=True)
     heart = models.IntegerField(blank=True)
@@ -41,6 +42,23 @@ class Favorites(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
+
+class ArtInfo(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    fcltyNm = models.TextField()
+    weekdayOperOpenHhmm = models.TextField()
+    weekdayOperColseHhmm = models.TextField()
+    holidayOperOpenHhmm = models.TextField()
+    holidayCloseOpenHhmm = models.TextField()
+    rstdeInfo = models.TextField()
+    adultChrge = models.TextField()
+    yngbgsChrge = models.TextField()
+    childChrge = models.TextField()
+    rdnmadr = models.TextField()
+    phoneNumber = models.TextField()
+    homepageUrl = models.TextField()
+    latitude = models.TextField()
+    longitude = models.TextField()
 
 
 class User(AbstractUser):

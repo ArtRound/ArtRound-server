@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Review, Question, Answer, Notice, Favorites, User
+from .models import Review, Question, Answer, Notice, Favorites, User, ArtInfo
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -31,6 +31,11 @@ class FavoritesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorites
         fields = ('id', 'title', 'content', 'updated_at')
+
+class ArtInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArtInfo
+        fields = ('id','fcltyNm','weekdayOperOpenHhmm','weekdayOperColseHhmm','holidayOperOpenHhmm','holidayCloseOpenHhmm','rstdeInfo','adultChrge','yngbgsChrge','childChrge','rdnmadr','phoneNumber','homepageUrl','latitude','longitude')
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

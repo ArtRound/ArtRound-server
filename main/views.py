@@ -21,8 +21,8 @@ from allauth.socialaccount.models import SocialAccount
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny
 
-from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, UserSerializer
-from .models import Review, Question, Answer, Notice, Favorites, User
+from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, ArtInfoSerializer, UserSerializer
+from .models import Review, Question, Answer, Notice, Favorites, ArtInfo, User
 
 
 class ReviewList(APIView):
@@ -255,6 +255,33 @@ class FavoritesDetail(APIView):
      
 #--------------------------------------------------------------------------------
 
+class ArtInfoList(APIView):
+    def get(self, request):
+        f = open('art_museum_info.json')
+        data = json.load(f)['item']
+        print(data)
+        f.close()
+
+        art_info = ArtInfo.objects.all()
+        serialized_art_info = ArtInfoSerializer(data, many=True)
+        # HttpResponse가 아니라 DRF의 Response를 씁시다.
+        return Response(data=serialized_art_info.data)
+
+# class ArtInfoDetail(APIView):
+#     # ArtInfo 객체 가져오기
+#     def get_object(self, pk):
+#         try:
+#             return ArtInfo.objects.get(pk=pk)
+#         except ArtInfo.DoesNotExist:
+#             raise Http404
+
+#     # ArtInfo Read
+#     def get(self, request, pk, format=None):
+#         art_info = self.get_object(pk)
+#         serializer = ArtInfoSerializer(art_info)
+#         return Response(serializer.data)  
+#--------------------------------------------------------------------------------
+
 KAKAO_CALLBACK_URI = 'http://localhost:3000/main/login/kakao'
 
 def kakao_login(request):
@@ -415,4 +442,4 @@ class GetInfo(APIView):
         user = User.objects.filter(pk=pk)
         print(pk)
         serializer = UserSerializer(user,many=True)
-        return Response(serializer.data, content_type='application/json; charset=utf-8')
+        return Response(serializer.data)
