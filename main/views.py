@@ -259,27 +259,32 @@ class ArtInfoList(APIView):
     def get(self, request):
         f = open('art_museum_info.json')
         data = json.load(f)['item']
-        print(data)
         f.close()
 
-        art_info = ArtInfo.objects.all()
         serialized_art_info = ArtInfoSerializer(data, many=True)
+        print(serialized_art_info.data)
         # HttpResponse가 아니라 DRF의 Response를 씁시다.
         return Response(data=serialized_art_info.data)
+    
 
-# class ArtInfoDetail(APIView):
-#     # ArtInfo 객체 가져오기
-#     def get_object(self, pk):
-#         try:
-#             return ArtInfo.objects.get(pk=pk)
-#         except ArtInfo.DoesNotExist:
-#             raise Http404
+class ArtInfoDetail(APIView):
+    # ArtInfo 객체 가져오기
+    def get_object(self, pk):
+        try:
+            f = open('art_museum_info.json')
+            data = json.load(f)['item']
+            f.close()
 
-#     # ArtInfo Read
-#     def get(self, request, pk, format=None):
-#         art_info = self.get_object(pk)
-#         serializer = ArtInfoSerializer(art_info)
-#         return Response(serializer.data)  
+            print(data[pk])
+            return data[pk]
+        except ArtInfo.DoesNotExist:
+            raise Http404
+
+    # ArtInfo Read
+    def get(self, request, pk, format=None):
+        art_info = self.get_object(pk)
+        serialized_art_info = ArtInfoSerializer(art_info)
+        return Response(serialized_art_info.data)  
 #--------------------------------------------------------------------------------
 
 KAKAO_CALLBACK_URI = 'http://localhost:3000/main/login/kakao'
