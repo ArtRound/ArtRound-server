@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import os, requests, json, jwt
 
 import requests
+import urllib.request
 from django.shortcuts import redirect
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -257,12 +258,21 @@ class FavoritesDetail(APIView):
 
 class ArtInfoList(APIView):
     def get(self, request):
-        f = open('art_museum_info.json')
-        data = json.load(f)['item']
-        f.close()
+        url = "http://api.data.go.kr/openapi/tn_pubr_public_museum_artgr_info_api?serviceKey=BfdusobQEjVcCsm1nVfc3AnA%2BsBih1Corc0TwKt9B%2Ft46CeONaFq%2Bn0%2BxkUnGO9fzeQHPLjXLLCk8aFpYejEbQ%3D%3D&pageNo="+str(1)+"&numOfRows=100&type=json"
+        art_api_request = urllib.request.Request(url)
+        response = urllib.request.urlopen(art_api_request)
+        rescode = response.getcode()
 
-        serialized_art_info = ArtInfoSerializer(data, many=True)
-        print(serialized_art_info.data)
+        if (rescode == 200):
+            response_body = response.read()
+            result = json.loads(response_body.decode('utf-8'))
+            items = result.get('response')['body']['items']
+
+            for i in range(len(items)):
+                items[i]['id'] = i
+
+        serialized_art_info = ArtInfoSerializer(items, many=True)
+        # print(serialized_art_info.data)
         # HttpResponse가 아니라 DRF의 Response를 씁시다.
         return Response(data=serialized_art_info.data)
     
