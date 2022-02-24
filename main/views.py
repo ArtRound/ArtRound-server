@@ -21,8 +21,8 @@ from allauth.socialaccount.models import SocialAccount
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny
 
-from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, ArtInfoSerializer, UserSerializer
-from .models import Review, Question, Answer, Notice, Favorites, ArtInfo, User
+from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, ArtInfoSerializer, UserSerializer, VisitedSerializer
+from .models import Review, Question, Answer, Notice, Favorites, ArtInfo, User, Visited
 
 
 class ReviewList(APIView):
@@ -286,6 +286,23 @@ class ArtInfoDetail(APIView):
         serialized_art_info = ArtInfoSerializer(art_info)
         return Response(serialized_art_info.data)  
 #--------------------------------------------------------------------------------
+
+class VisitedList(APIView):
+    # 즐겨찾기 목록
+    def get(self, request):
+        visited = Visited.objects.all()
+        serializer = VisitedSerializer(visited, many=True)
+        return Response(serializer.data)
+
+    # Favorites Create
+    def post(self, request):
+        serializer = VisitedSerializer(data=request.data)  # request.data : 사용자 입력 데이터
+        if serializer.is_valid():  # 유효성 검사
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#--------------------------------------------------------------------------------        
 
 KAKAO_CALLBACK_URI = 'http://localhost:3000/main/login/kakao'
 

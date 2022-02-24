@@ -60,6 +60,10 @@ class ArtInfo(models.Model):
     latitude = models.TextField()
     longitude = models.TextField()
 
+class Visited(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    title = models.CharField(max_length=50)
+    address = models.TextField()
 
 class User(AbstractUser):
     username = None
