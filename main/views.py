@@ -256,24 +256,31 @@ class FavoritesDetail(APIView):
      
 #--------------------------------------------------------------------------------
 
+def get_art_info():
+        data = []
+        idx = 0
+        for i in range(1,17):
+            url = "http://api.data.go.kr/openapi/tn_pubr_public_museum_artgr_info_api?serviceKey=BfdusobQEjVcCsm1nVfc3AnA%2BsBih1Corc0TwKt9B%2Ft46CeONaFq%2Bn0%2BxkUnGO9fzeQHPLjXLLCk8aFpYejEbQ%3D%3D&pageNo="+str(i)+"&numOfRows=100&type=json"
+            art_api_request = urllib.request.Request(url)
+            response = urllib.request.urlopen(art_api_request)
+            rescode = response.getcode()
+
+            if (rescode == 200):
+                response_body = response.read()
+                result = json.loads(response_body.decode('utf-8'))
+                items = result.get('response')['body']['items']
+
+                for i in range(len(items)):
+                    items[i]['id'] = idx
+                    data.append(items[i])
+                    idx+=1
+        return data
+
 class ArtInfoList(APIView):
     def get(self, request):
-        url = "http://api.data.go.kr/openapi/tn_pubr_public_museum_artgr_info_api?serviceKey=BfdusobQEjVcCsm1nVfc3AnA%2BsBih1Corc0TwKt9B%2Ft46CeONaFq%2Bn0%2BxkUnGO9fzeQHPLjXLLCk8aFpYejEbQ%3D%3D&pageNo="+str(1)+"&numOfRows=100&type=json"
-        art_api_request = urllib.request.Request(url)
-        response = urllib.request.urlopen(art_api_request)
-        rescode = response.getcode()
+        data = get_art_info()
+        serialized_art_info = ArtInfoSerializer(data, many=True)
 
-        if (rescode == 200):
-            response_body = response.read()
-            result = json.loads(response_body.decode('utf-8'))
-            items = result.get('response')['body']['items']
-
-            for i in range(len(items)):
-                items[i]['id'] = i
-
-        serialized_art_info = ArtInfoSerializer(items, many=True)
-        # print(serialized_art_info.data)
-        # HttpResponse가 아니라 DRF의 Response를 씁시다.
         return Response(data=serialized_art_info.data)
     
 
@@ -281,11 +288,7 @@ class ArtInfoDetail(APIView):
     # ArtInfo 객체 가져오기
     def get_object(self, pk):
         try:
-            f = open('art_museum_info.json')
-            data = json.load(f)['item']
-            f.close()
-
-            print(data[pk])
+            data = get_art_info()
             return data[pk]
         except ArtInfo.DoesNotExist:
             raise Http404
