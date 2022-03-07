@@ -71,6 +71,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook', # 아직 페북은 정상작동 안됨 도메인 뭐시기 뜸
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.kakao',
+    
+    'rest_framework.authtoken', # for mac
 ]
 
 MIDDLEWARE = [
