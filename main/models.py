@@ -21,27 +21,35 @@ class Question(models.Model):
         ('report', 'report'), ('login', 'login'),
         ('use', 'use'), ('proposal', 'proposal'), ('etc', 'etc')
     }
+    id = models.BigAutoField(primary_key=True)
     user_id = models.ForeignKey('User', related_name='question', on_delete=models.CASCADE, db_column='user_id')
+    answer_id = models.ForeignKey('Answer', related_name='answer', on_delete=models.CASCADE, db_column='answer_id')
     type = models.CharField(max_length=80, choices=QUESTION_CHOICES, null=True)
     title = models.CharField(max_length=50)
     content = models.TextField()
     updated_at = models.DateField(auto_now=True)
 
 class Answer(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    question_id = models.ForeignKey('Question', related_name='question', on_delete=models.CASCADE, db_column='question_id')
     content = models.TextField()
     updated_at = models.DateField(auto_now=True)
 
 
 class Notice(models.Model):
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=50)
     content = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class Favorites(models.Model):
+    id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=50)
     content = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
+    start_time = models.TextField()
+    end_time = models.TextField()
 
 class ArtInfo(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -64,6 +72,8 @@ class Visited(models.Model):
     id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=50)
     address = models.TextField()
+    start_time = models.TextField()
+    end_time = models.TextField()
 
 class User(AbstractUser):
     username = None

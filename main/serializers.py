@@ -7,40 +7,40 @@ class ReviewSerializer(serializers.ModelSerializer):
     image = Base64ImageField(use_url=True, max_length=None)
     class Meta:
         model = Review
-        fields = ('id', 'title', 'content', 'useremail', 'updated_at', 'image')
+        fields = "__all__"
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'useremail', 'type', 'title', 'content', 'updated_at')
+        fields = "__all__"
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ('id', 'content', 'updated_at')
+        fields = "__all__"
 
 
 class NoticeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notice
-        fields = ('id', 'title', 'content', 'updated_at')
+        fields = "__all__"
 
 
 class FavoritesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorites
-        fields = ('id', 'title', 'content', 'updated_at')
+        fields = "__all__"
 
 class ArtInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ArtInfo
-        fields = ('id','fcltyNm','weekdayOperOpenHhmm','weekdayOperColseHhmm','holidayOperOpenHhmm','holidayCloseOpenHhmm','rstdeInfo','adultChrge','yngbgsChrge','childChrge','rdnmadr','phoneNumber','homepageUrl','latitude','longitude')
+        fields = "__all__"
 
 class VisitedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Visited
-        fields = ('id', 'title', 'address')
+        fields = "__all__"
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
