@@ -11,7 +11,7 @@ class Review(models.Model):
     title = models.CharField(max_length=50)
     content = models.TextField()
     user_id = models.ForeignKey('User', related_name='review', on_delete=models.CASCADE, db_column='user_id')
-    # art_info_id = models.ForeignKey('ArtInfo', related_name='review', on_delete=models.CASCADE, db_column='art_info_id')
+    art_info_id = models.ForeignKey('ArtInfo', related_name='review', on_delete=models.CASCADE, db_column='art_info_id')
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(blank=True)
     heart = models.IntegerField(blank=True)
