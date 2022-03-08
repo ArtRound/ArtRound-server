@@ -28,17 +28,23 @@ from .models import Review, Question, Answer, Notice, Favorites, ArtInfo, User, 
 
 class ReviewList(APIView):
     # 블로그 목록 보여줄 때
-    def get(self, request):
-        reviews = Review.objects.all()
+    def get(self, request, pk):
+        reviews = Review.objects.filter(art_info_id = pk)
         # 여러개 객체 serialize하려면 many=True
         # TO JSON Format
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
     # 새 글 작성시
-    def post(self, request):
-        serializer = ReviewSerializer(
-            data=request.data)  # request.data는 사용자 입력 데이터
+    def post(self, request, pk):
+        data = json.loads(request.body)
+        ReviewData = {
+            'title' : data['title'],
+            'content' : data['content'],
+            'user_id' : data['user_id'],
+            'art_info_id' : pk
+        }
+        serializer = ReviewSerializer(data=ReviewData)  # request.data는 사용자 입력 데이터
         if serializer.is_valid():  # 유효성 검사
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -47,21 +53,21 @@ class ReviewList(APIView):
 
 class ReviewDetail(APIView):
     # Review 객체 가져오기
-    def get_object(self, pk):
+    def get_object(self, pk2):
         try:
-            return Review.objects.get(pk=pk)
+            return Review.objects.get(pk=pk2)
         except Review.DoesNotExist:
             raise Http404
 
     # Review detail 보기
-    def get(self, request, pk, format=None):
-        review = self.get_object(pk)
+    def get(self, request, pk2, format=None):
+        review = self.get_object(pk2)
         serializer = ReviewSerializer(review)
         return Response(serializer.data)
 
     # Review 수정하기
-    def put(self, request, pk, format=None):
-        review = self.get_object(pk)
+    def put(self, request, pk2, format=None):
+        review = self.get_object(pk2)
         serializer = ReviewSerializer(review, data=request.data)
         if serializer.is_valid():  # 유효성 검사
             serializer.save()
@@ -69,8 +75,8 @@ class ReviewDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Review 삭제하기
-    def delete(self, request, pk, format=None):
-        review = self.get_object(pk)
+    def delete(self, request, pk2, format=None):
+        review = self.get_object(pk2)
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
