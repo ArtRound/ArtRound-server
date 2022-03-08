@@ -42,6 +42,7 @@ class ReviewList(APIView):
             'title' : data['title'],
             'content' : data['content'],
             'user_id' : data['user_id'],
+            'heart' : data['heart'],
             'art_info_id' : pk
         }
         serializer = ReviewSerializer(data=ReviewData)  # request.data는 사용자 입력 데이터
@@ -279,31 +280,39 @@ def get_art_info():
                 for i in range(len(items)):
                     items[i]['id'] = idx
                     data.append(items[i])
+                    ArtInfo.objects.create(id=items[i]['id'], fcltyNm=items[i]['fcltyNm'],
+                                           weekdayOperOpenHhmm=items[i]['weekdayOperOpenHhmm'], 
+                                           weekdayOperColseHhmm=items[i]['weekdayOperColseHhmm'],
+                                           holidayOperOpenHhmm=items[i]['holidayOperOpenHhmm'], 
+                                           holidayCloseOpenHhmm=items[i]['holidayCloseOpenHhmm'],
+                                           rstdeInfo=items[i]['rstdeInfo'], adultChrge=items[i]['adultChrge'],
+                                           yngbgsChrge=items[i]['yngbgsChrge'], childChrge=items[i]['childChrge'], 
+                                           rdnmadr=items[i]['rdnmadr'], phoneNumber=items[i]['phoneNumber'], 
+                                           homepageUrl=items[i]['homepageUrl'], latitude=items[i]['latitude'], longitude=items[i]['longitude']
+                                           )
                     idx+=1
-        return data
-
+                    
 class ArtInfoList(APIView):
     def get(self, request):
-        data = get_art_info()
-        serialized_art_info = ArtInfoSerializer(data, many=True)
-
-        return Response(data=serialized_art_info.data)
-    
+        get_art_info()
+        art_info = ArtInfo.objects.all()
+        serializer = ArtInfoSerializer(art_info, many=True)
+        
+        return Response(serializer.data)
 
 class ArtInfoDetail(APIView):
     # ArtInfo 객체 가져오기
     def get_object(self, pk):
         try:
-            data = get_art_info()
-            return data[pk]
+            return ArtInfo.objects.get(pk=pk)
         except ArtInfo.DoesNotExist:
             raise Http404
 
     # ArtInfo Read
     def get(self, request, pk, format=None):
         art_info = self.get_object(pk)
-        serialized_art_info = ArtInfoSerializer(art_info)
-        return Response(serialized_art_info.data)  
+        serializer = ArtInfoSerializer(art_info)
+        return Response(serializer.data) 
 #--------------------------------------------------------------------------------
 
 class VisitedList(APIView):
