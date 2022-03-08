@@ -14,8 +14,7 @@ from main import views
 urlpatterns = [
     # path('hello/', helloAPI),
     # path('<int:id>/', create),
-    path('review/', ReviewList.as_view()),
-    path('review/<int:pk>/', ReviewDetail.as_view()),
+    
     path('question/', QuestionList.as_view()),
     path('question/<int:pk>/', QuestionDetail.as_view()),
     path('answer/', AnswerList.as_view()),
@@ -24,8 +23,10 @@ urlpatterns = [
     path('notice/<int:pk>/', NoticeDetail.as_view()),
     path('favorites/', FavoritesList.as_view()),
     path('favorites/<int:pk>', FavoritesDetail.as_view()),
-    path('art_info/', ArtInfoList.as_view()),
-    path('art_info/<int:pk>', ArtInfoDetail.as_view()),
+    path('art_info/', ArtInfoList.as_view()), # 전시회들
+    path('art_info/<int:pk>', ArtInfoDetail.as_view()), # 전시회 정보
+    path('art_info/<int:pk>/review/', ReviewList.as_view()), # 전시회 리뷰
+    path('art_info/<int:pk>/review/<int:pk2>/', ReviewDetail.as_view()), # 전시회 리뷰 디테일
     path('visited/', VisitedList.as_view()),
 
     path('login/kakao/', views.kakao_login, name='kakao_login'),
