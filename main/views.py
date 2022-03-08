@@ -61,13 +61,13 @@ class ReviewDetail(APIView):
             raise Http404
 
     # Review detail 보기
-    def get(self, request, pk2, format=None):
+    def get(self, request, pk, pk2, format=None):
         review = self.get_object(pk2)
         serializer = ReviewSerializer(review)
         return Response(serializer.data)
 
     # Review 수정하기
-    def put(self, request, pk2, format=None):
+    def put(self, request, pk, pk2, format=None):
         review = self.get_object(pk2)
         serializer = ReviewSerializer(review, data=request.data)
         if serializer.is_valid():  # 유효성 검사
@@ -76,7 +76,7 @@ class ReviewDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Review 삭제하기
-    def delete(self, request, pk2, format=None):
+    def delete(self, request, pk, pk2, format=None):
         review = self.get_object(pk2)
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
