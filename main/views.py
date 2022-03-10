@@ -294,8 +294,10 @@ def get_art_info():
                     
 class ArtInfoList(APIView):
     def get(self, request):
-        get_art_info()
         art_info = ArtInfo.objects.all()
+        if(len(art_info)==0):
+            get_art_info()
+            art_info = ArtInfo.objects.all()
         serializer = ArtInfoSerializer(art_info, many=True)
         
         return Response(serializer.data)
