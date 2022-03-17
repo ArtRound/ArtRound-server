@@ -50,6 +50,7 @@ class Favorites(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     start_time = models.TextField()
     end_time = models.TextField()
+    art_info_id = models.ForeignKey('ArtInfo', related_name='favorites', on_delete=models.CASCADE, db_column='art_info_id')
 
 class ArtInfo(models.Model):
     id = models.BigAutoField(primary_key=True)
