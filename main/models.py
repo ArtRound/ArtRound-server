@@ -23,7 +23,6 @@ class Question(models.Model):
     }
     id = models.BigAutoField(primary_key=True)
     user_id = models.ForeignKey('User', related_name='question', on_delete=models.CASCADE, db_column='user_id')
-    answer_id = models.ForeignKey('Answer', related_name='question', on_delete=models.CASCADE, db_column='answer_id')
     type = models.CharField(max_length=80, choices=QUESTION_CHOICES, null=True)
     title = models.CharField(max_length=50)
     content = models.TextField()
