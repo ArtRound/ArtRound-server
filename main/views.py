@@ -318,19 +318,39 @@ class ArtInfoDetail(APIView):
 #--------------------------------------------------------------------------------
 
 class VisitedList(APIView):
-    # 즐겨찾기 목록
+    # 방문 목록
     def get(self, request):
         visited = Visited.objects.all()
         serializer = VisitedSerializer(visited, many=True)
         return Response(serializer.data)
 
-    # Favorites Create
+    # Visited Create
     def post(self, request):
         serializer = VisitedSerializer(data=request.data)  # request.data : 사용자 입력 데이터
         if serializer.is_valid():  # 유효성 검사
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class VisitedDetail(APIView):
+    # Visited 객체 가져오기
+    def get_object(self, pk):
+        try:
+            return Visited.objects.get(pk=pk)
+        except Visited.DoesNotExist:
+            raise Http404
+
+    # Visited Read
+    def get(self, request, pk, format=None):
+        visited = self.get_object(pk)
+        serializer = VisitedSerializer(visited)
+        return Response(serializer.data)
+
+    # Visited Delete
+    def delete(self, request, pk, format=None):
+        visited = self.get_object(pk)
+        visited.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)    
 
 #--------------------------------------------------------------------------------        
 

@@ -6,7 +6,7 @@ from .views import AnswerList, AnswerDetail
 from .views import NoticeList, NoticeDetail
 from .views import FavoritesList, FavoritesDetail
 from .views import ArtInfoList, ArtInfoDetail
-from .views import VisitedList
+from .views import VisitedList, VisitedDetail
 from .views import KakaoLogin, GoogleLogin
 from .views import AddInfo
 from main import views
@@ -28,6 +28,7 @@ urlpatterns = [
     path('art_info/<int:pk>/review/', ReviewList.as_view()), # 전시회 리뷰
     path('art_info/<int:pk>/review/<int:pk2>/', ReviewDetail.as_view()), # 전시회 리뷰 디테일
     path('visited/', VisitedList.as_view()),
+    path('visited/<int:pk>', VisitedDetail.as_view()),
 
     path('login/kakao/', views.kakao_login, name='kakao_login'),
     path('login/kakao/finish/', KakaoLogin.as_view(), name='kakao_login_todjango'),
