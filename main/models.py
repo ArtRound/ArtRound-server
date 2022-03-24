@@ -13,8 +13,11 @@ class Review(models.Model):
     user_id = models.ForeignKey('User', related_name='review', on_delete=models.CASCADE, db_column='user_id')
     art_info_id = models.ForeignKey('ArtInfo', related_name='review', on_delete=models.CASCADE, db_column='art_info_id')
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.ImageField(blank=True)
     heart = models.IntegerField(blank=True)
+    
+class Image(models.Model):
+    review = models.ForeignKey(Review, blank=False, null=False, on_delete=models.CASCADE, default=1)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
 
 class Question(models.Model):
     QUESTION_CHOICES = {

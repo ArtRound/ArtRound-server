@@ -1,3 +1,4 @@
+from dataclasses import field
 from rest_framework import serializers
 from .models import Review, Question, Answer, Notice, Favorites, User, ArtInfo, Visited
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -6,7 +7,6 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = "__all__"
-
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:

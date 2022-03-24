@@ -23,7 +23,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.permissions import AllowAny
 
 from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, ArtInfoSerializer, UserSerializer, VisitedSerializer
-from .models import Review, Question, Answer, Notice, Favorites, ArtInfo, User, Visited
+from .models import Review, Image, Question, Answer, Notice, Favorites, ArtInfo, User, Visited
 
 
 class ReviewList(APIView):
@@ -37,17 +37,21 @@ class ReviewList(APIView):
 
     # 새 글 작성시
     def post(self, request, pk):
-        data = json.loads(request.body)
         ReviewData = {
-            'title' : data['title'],
-            'content' : data['content'],
-            'user_id' : data['user_id'],
-            'heart' : data['heart'],
+            'title' : request.POST['title'],
+            'content' : request.POST['content'],
+            'user_id' : request.POST['user_id'],
+            'heart' : request.POST['heart'],
             'art_info_id' : pk
         }
         serializer = ReviewSerializer(data=ReviewData)  # request.data는 사용자 입력 데이터
         if serializer.is_valid():  # 유효성 검사
-            serializer.save()
+            review = serializer.save()
+            
+            image_list = request.FILES.getlist('image')
+            for item in image_list: 
+                images = Image.objects.create(review_id=review.id, image=item)
+                images.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
