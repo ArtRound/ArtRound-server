@@ -25,6 +25,7 @@ from rest_framework.permissions import AllowAny
 from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, ArtInfoSerializer, UserSerializer, VisitedSerializer
 from .models import Review, Image, Question, Answer, Notice, Favorites, ArtInfo, User, Visited
 
+from .forms import ReviewForm
 
 class ReviewList(APIView):
     # 블로그 목록 보여줄 때
@@ -45,16 +46,16 @@ class ReviewList(APIView):
                 'heart' : request.POST.get('heart'),
                 'art_info_id' : pk
             }
-            serializer = ReviewSerializer(data=ReviewData)  # request.data는 사용자 입력 데이터
-            if serializer.is_valid():  # 유효성 검사
-                review = serializer.save()
-                
+            form = ReviewForm(ReviewData)
+            
+            if form.is_valid():
+                review = form.save()
                 image_list = request.FILES.getlist('image')
                 for item in image_list: 
                     images = Image.objects.create(review_id=review.id, image=item)
                     images.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(form.data, status=status.HTTP_201_CREATED)
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReviewDetail(APIView):
