@@ -47,11 +47,7 @@ class Notice(models.Model):
 
 class Favorites(models.Model):
     id = models.BigAutoField(primary_key=True)
-    title = models.CharField(max_length=50)
-    content = models.TextField()
-    updated_at = models.DateTimeField(auto_now=True)
-    start_time = models.TextField()
-    end_time = models.TextField()
+    user_id = models.ForeignKey('User', related_name='favorites', on_delete=models.CASCADE, db_column='user_id')
     art_info_id = models.ForeignKey('ArtInfo', related_name='favorites', on_delete=models.CASCADE, db_column='art_info_id')
 
 class ArtInfo(models.Model):
@@ -73,10 +69,8 @@ class ArtInfo(models.Model):
 
 class Visited(models.Model):
     id = models.BigAutoField(primary_key=True)
-    title = models.CharField(max_length=50)
-    address = models.TextField()
-    start_time = models.TextField()
-    end_time = models.TextField()
+    user_id = models.ForeignKey('User', related_name='visited', on_delete=models.CASCADE, db_column='user_id')
+    art_info_id = models.ForeignKey('ArtInfo', related_name='visited', on_delete=models.CASCADE, db_column='art_info_id')
 
 class User(AbstractUser):
     username = None
