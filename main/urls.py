@@ -30,6 +30,7 @@ urlpatterns = [
     path('art_info/', ArtInfoList.as_view()), # 전시회들
     path('art_info/<int:pk>', ArtInfoDetail.as_view()), # 전시회 정보
     path('art_info/<int:pk>/favorites', FavoritesList.as_view()), # 즐겨찾기 등록
+    path('art_info/<int:pk>/visited', VisitedList.as_view()), # 방문했다요 등록
     path('art_info/<int:pk>/review/', ReviewList.as_view()), # 전시회 리뷰
     path('art_info/<int:pk>/review/<int:pk2>/', ReviewDetail.as_view()), # 전시회 리뷰 디테일
     

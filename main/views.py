@@ -338,8 +338,12 @@ class VisitedList(APIView):
         return Response(serializer.data)
 
     # Visited Create
-    def post(self, request):
-        serializer = VisitedSerializer(data=request.data)  # request.data : 사용자 입력 데이터
+    def post(self, request, pk):
+        VisitedData = {
+                'user_id' : request.data['user_id'],
+                'art_info_id' : pk
+        }
+        serializer = VisitedSerializer(data=VisitedData)  # request.data : 사용자 입력 데이터
         if serializer.is_valid():  # 유효성 검사
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
