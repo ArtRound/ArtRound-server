@@ -232,13 +232,17 @@ class FavoritesList(APIView):
         return Response(serializer.data)
 
     # Favorites Create
-    def post(self, request):
-        serializer = FavoritesSerializer(data=request.data)  # request.data : 사용자 입력 데이터
+    def post(self, request, pk):
+        FavoritesData = {
+                'user_id' : request.data['user_id'],
+                'art_info_id' : pk
+        }
+        serializer = FavoritesSerializer(data=FavoritesData)  # request.data : 사용자 입력 데이터
         if serializer.is_valid():  # 유효성 검사
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
 
 class FavoritesDetail(APIView):
     # Favorites 객체 가져오기
