@@ -1,10 +1,5 @@
 from django.contrib import admin
-from .models import Answer
-from .models import Review, Image
-from .models import Question
-from .models import Notice
-from .models import Favorites
-from .models import User
+from .models import Answer, Review, Image, Question, Notice, Favorites, User, Visited
 
 from rest_framework_simplejwt.token_blacklist.admin import OutstandingTokenAdmin
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
@@ -23,6 +18,7 @@ admin.site.register(Notice)
 admin.site.register(Favorites)
 admin.site.register(Answer)
 admin.site.register(User)
+admin.site.register(Visited)
 
 class CustomOutstandingTokenAdmin(OutstandingTokenAdmin):
     def has_delete_permission(self, *args, **kwargs):
