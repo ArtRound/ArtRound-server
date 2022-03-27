@@ -1,12 +1,20 @@
 from dataclasses import field
 from rest_framework import serializers
-from .models import Review, Question, Answer, Notice, Favorites, User, ArtInfo, Visited
+from .models import Review, Image, Question, Answer, Notice, Favorites, User, ArtInfo, Visited
 from rest_framework_simplejwt.tokens import RefreshToken
 
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['image']
+
 class ReviewSerializer(serializers.ModelSerializer):
+    image = ImageSerializer(many=True, read_only=True)
+    
     class Meta:
         model = Review
-        fields = "__all__"
+        fields = ['id', 'title', 'content', 'user_id', 'art_info_id', 'updated_at', 'heart', 'image']
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:

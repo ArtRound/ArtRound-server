@@ -22,7 +22,7 @@ from allauth.socialaccount.models import SocialAccount
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny
 
-from .serializers import ReviewSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, ArtInfoSerializer, UserSerializer, VisitedSerializer
+from .serializers import ReviewSerializer, ImageSerializer, QuestionSerializer, AnswerSerializer, NoticeSerializer, FavoritesSerializer, ArtInfoSerializer, UserSerializer, VisitedSerializer
 from .models import Review, Image, Question, Answer, Notice, Favorites, ArtInfo, User, Visited
 
 from .forms import ReviewForm
@@ -62,14 +62,15 @@ class ReviewDetail(APIView):
     # Review 객체 가져오기
     def get_object(self, pk2):
         try:
-            return Review.objects.get(pk=pk2)
+            return Review.objects.filter(pk=pk2)
         except Review.DoesNotExist:
             raise Http404
-
+        
     # Review detail 보기
     def get(self, request, pk, pk2, format=None):
         review = self.get_object(pk2)
-        serializer = ReviewSerializer(review)
+        serializer = ReviewSerializer(review, many=True)
+        
         return Response(serializer.data)
 
     # Review 수정하기

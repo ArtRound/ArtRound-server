@@ -16,7 +16,7 @@ class Review(models.Model):
     heart = models.IntegerField(blank=True)
     
 class Image(models.Model):
-    review = models.ForeignKey(Review, blank=False, null=False, on_delete=models.CASCADE, default=1)
+    review = models.ForeignKey(Review, blank=False, null=False, on_delete=models.CASCADE, default=1, related_name='image')
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 
 class Question(models.Model):
