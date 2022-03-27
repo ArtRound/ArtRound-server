@@ -133,6 +133,7 @@ class QuestionDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 #--------------------------------------------------------------------------------
+
 class AnswerList(APIView):
     def get(self, request):
         answers = Answer.objects.all()
@@ -322,6 +323,7 @@ class ArtInfoDetail(APIView):
         art_info = self.get_object(pk)
         serializer = ArtInfoSerializer(art_info)
         return Response(serializer.data) 
+    
 #--------------------------------------------------------------------------------
 
 class VisitedList(APIView):
