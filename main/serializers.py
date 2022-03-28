@@ -2,6 +2,7 @@ from dataclasses import field
 from rest_framework import serializers
 from .models import Review, Image, Question, Answer, Notice, Favorites, User, ArtInfo, Visited
 from rest_framework_simplejwt.tokens import RefreshToken
+from drf_extra_fields.fields import Base64ImageField
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +10,7 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = ['image']
 
 class ReviewSerializer(serializers.ModelSerializer):
-    image = ImageSerializer(many=True, read_only=True)
+    image = Base64ImageField(use_url=True, max_length=None)
     
     class Meta:
         model = Review
