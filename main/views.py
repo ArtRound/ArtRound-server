@@ -227,7 +227,11 @@ class NoticeDetail(APIView):
 class FavoritesList(APIView):
     # 즐겨찾기 목록
     def get(self, request):
+        user_info = json.loads(request.body)
+        
         favorites = Favorites.objects.all()
+        favorites = favorites.filter(user_id=user_info['params']['id'])
+        
         serializer = FavoritesSerializer(favorites, many=True)
         return Response(serializer.data)
 
