@@ -337,7 +337,11 @@ class ArtInfoDetail(APIView):
 class VisitedList(APIView):
     # 방문 목록
     def get(self, request):
+        user_info = json.loads(request.body)
+
         visited = Visited.objects.all()
+        visited = visited.filter(user_id=user_info['params']['id'])
+
         serializer = VisitedSerializer(visited, many=True)
         return Response(serializer.data)
 
