@@ -10,7 +10,7 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = ['image']
 
 class ReviewSerializer(serializers.ModelSerializer):
-    image = Base64ImageField(use_url=True, max_length=None)
+    image = ImageSerializer(many=True, read_only=True)
     
     class Meta:
         model = Review
