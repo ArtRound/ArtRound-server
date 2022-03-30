@@ -24,8 +24,8 @@ urlpatterns = [
     path('notice/', NoticeList.as_view()),
     path('notice/<int:pk>/', NoticeDetail.as_view()),
     
-    path('favorites/', FavoritesList.as_view()), # 즐겨찾기 목록
-    path('favorites/<int:pk>', FavoritesList.as_view()), # 즐겨찾기 등록
+    path('favorites/', FavoritesList.as_view()), # 즐겨찾기 등록
+    path('favorites/<int:pk>', FavoritesList.as_view()), # 즐겨찾기 목록
     path('favorites/<int:pk>', FavoritesDetail.as_view()),
     
     path('art_info/', ArtInfoList.as_view()), # 전시회들
@@ -34,8 +34,8 @@ urlpatterns = [
     path('art_info/<int:pk>/review/<int:pk2>/', ReviewDetail.as_view()), # 전시회 리뷰 디테일
     
     
-    path('visited/', VisitedList.as_view()), # 방문 목록
-    path('visited/<int:pk>', VisitedList.as_view()), # 방문 등록
+    path('visited/', VisitedList.as_view()), # 방문 등록
+    path('visited/<int:pk>', VisitedList.as_view()), # 방문 목록
     path('visited/<int:pk>', VisitedDetail.as_view()),
 
     path('login/kakao/', views.kakao_login, name='kakao_login'),
