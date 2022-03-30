@@ -24,6 +24,7 @@ urlpatterns = [
     path('notice/', NoticeList.as_view()),
     path('notice/<int:pk>/', NoticeDetail.as_view()),
     
+    path('favorites/', FavoritesList.as_view()),
     path('favorites/<int:pk>', FavoritesList.as_view()),
     path('favorites/<int:pk>', FavoritesDetail.as_view()),
     

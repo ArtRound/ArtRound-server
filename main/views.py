@@ -235,14 +235,14 @@ class FavoritesList(APIView):
             
 
     # Favorites Create
-    def post(self, request, pk):
+    def post(self, request):
         FavoritesData = {
                 'title' : request.data['title'],
                 'content' : request.data['content'],
                 'start_time' : request.data['start_time'],
                 'end_time' : request.data['end_time'],
                 'user_id' : request.data['user_id'],
-                'art_info_id' : pk
+                'art_info_id' : request.data['art_info_id']
         }
         serializer = FavoritesSerializer(data=FavoritesData)  # request.data : 사용자 입력 데이터
         if serializer.is_valid():  # 유효성 검사
