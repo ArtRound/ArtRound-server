@@ -37,6 +37,7 @@ urlpatterns = [
     
     
     path('visited/', VisitedList.as_view()),
+    path('visited/<int:pk>', VisitedList.as_view()),
     path('visited/<int:pk>', VisitedDetail.as_view()),
 
     path('login/kakao/', views.kakao_login, name='kakao_login'),

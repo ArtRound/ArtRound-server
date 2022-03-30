@@ -232,7 +232,6 @@ class FavoritesList(APIView):
         
         serializer = FavoritesSerializer(favorites, many=True)
         return Response(serializer.data)
-            
 
     # Favorites Create
     def post(self, request):
@@ -331,22 +330,16 @@ class ArtInfoDetail(APIView):
 
 class VisitedList(APIView):
     # 방문 목록
-    def get(self, request):
-        user_info = json.loads(request.body)
-
+    def get(self, request, pk):
         visited = Visited.objects.all()
-        visited = visited.filter(user_id=user_info['params']['id'])
+        visited = visited.filter(user_id=pk)
 
         serializer = VisitedSerializer(visited, many=True)
         return Response(serializer.data)
 
     # Visited Create
-    def post(self, request, pk):
-        VisitedData = {
-                'user_id' : request.data['user_id'],
-                'art_info_id' : pk
-        }
-        serializer = VisitedSerializer(data=VisitedData)  # request.data : 사용자 입력 데이터
+    def post(self, request):
+        serializer = VisitedSerializer(data=request.data)  # request.data : 사용자 입력 데이터
         if serializer.is_valid():  # 유효성 검사
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
