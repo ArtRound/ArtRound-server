@@ -226,18 +226,21 @@ class NoticeDetail(APIView):
 
 class FavoritesList(APIView):
     # 즐겨찾기 목록
-    def get(self, request):
-        user_info = json.loads(request.body)
-        
+    def get(self, request, pk):
         favorites = Favorites.objects.all()
-        favorites = favorites.filter(user_id=user_info['params']['id'])
+        favorites = favorites.filter(user_id=pk)
         
         serializer = FavoritesSerializer(favorites, many=True)
         return Response(serializer.data)
+            
 
     # Favorites Create
     def post(self, request, pk):
         FavoritesData = {
+                'title' : request.data['title'],
+                'content' : request.data['content'],
+                'start_time' : request.data['start_time'],
+                'end_time' : request.data['end_time'],
                 'user_id' : request.data['user_id'],
                 'art_info_id' : pk
         }
@@ -537,6 +540,7 @@ class AddInfo(APIView):
 class GetInfo(APIView):
     def get(self, request, pk):
         user = User.objects.filter(pk=pk)
+        print('여기는 GetInfo')
         print(pk)
         serializer = UserSerializer(user,many=True)
         return Response(serializer.data)
